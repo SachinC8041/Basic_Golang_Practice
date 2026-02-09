@@ -64,6 +64,17 @@ First Program:
     the compiled result for later use. That is done with go build:
     $ go build main.go
 
+    i.e. first do : go build main.go (it will create binary executables)
+         second (like C language ): ./hello (to run the binary executable)
+
+    when we directly hit command : go run main.go the compiler will still create a Temporary Executable File on RAM and that 
+    executable will get executated. 
+
+    Note : Only necessary functions and variables and libraries are used in Go , not necessary files get removed 
+            this concept is called "Tree Shaking".
+
+    Compiler : translate human readable code to language that Machine Understands(i.e. Binary 0 and 1)
+
     Go has 25 keywords like if and switch that may be used only where the syntax per mits; they can’t be used as names.
     break    default    func    interface   select
     case    defer   go      map     struct
@@ -89,9 +100,95 @@ First Program:
         %d = int 
         %.2f = float number till 2 decimal pointa 
         %T = Type 
+        %t = bool
         %s = strings
         %q = quoted strings 
 
+    Note : Default values for data types :
+            1.Numeric Types : 0
+            2.Boolean Types : false 
+            3.String Types : ""
+            4.Pointers,slices ,map, functions , structs : nil 
+
+
+package main
+
+import "fmt"
+
+func main() {
+	var name string = "Sachin Tendulkar"
+	var age int = 12
+	var temperature float64 = 23.23
+	var isApplicable = false
+	const taxApplicablePercentage int = 12
+	// taxApplicablePercentage = 23; // you cant reassign value if the varible is constant ie. const
+
+	//another way to declare the variables
+	count := 12   //this declaration and initialization is called "Short Hand Declaration or GOpher Declaration" 
+	fmt.Println(count)
+
+    //Note : Generally the Short Hand notification is intended to use for declaration + initialization of Local Variables 
+             We can not use it for declaration + initialization of Global Variable.
+
+
+	fmt.Println("Name of the person is:", name)
+	fmt.Println("Age of the person is:", age)
+	fmt.Println("Temperature of the city is :", temperature, "And current tax rate is:", taxApplicablePercentage)
+	fmt.Println("the is wrong so :", isApplicable)
+
+	//Println and Printf function demo
+
+	fmt.Println("Name =", name, "Age =", age, "Temperature =", temperature, "isApplicable =", isApplicable, "TaxRate =", taxApplicablePercentage)
+	fmt.Printf("Name is %s and Age is %d and temperature is %f and taxrate is %d and isApplicable is %t\n", name, age, temperature, taxApplicablePercentage, isApplicable)
+
+}
+
+
+# Rules for Naming Conventions of Variables : 
+    1. PascalCase : structs , enums , interfaces    eg. CalculateArea , UserInfo 
+    2. snake_case : file names , package names     eg. user_id, first_name 
+    3. UPPERCASE : constants   eg . TAXRATE 
+    4. camelCase : 
+
+
+# Arithmetic Operators : 
+
+package main
+
+import "fmt"
+
+func main() {
+	var a, b int = 10, 4
+
+	addition := a + b
+	fmt.Println("Addition is :", addition)
+
+	substraction := a - b
+	fmt.Println("Substraction is :", substraction)
+
+	multiplication := a * b
+	fmt.Println("Multiplication is :", multiplication)
+
+	division := a / b
+	fmt.Println("Division is :", division)
+
+	var div float64 = 22 / 7
+	fmt.Println(div)
+
+	var div2 float64 = 22 / 7.0 // or 22.0/7 as well
+	fmt.Println(div2)
+
+	//Note : in Go , Int / Int will always give int as division answer . (truncated towards zero)
+	// if we want floting point answer then at least one of the two numbers should be float type
+	// note : the exection of the operation will start from right to left i.e. 7.0 to 22 so compiler doesnt understand
+	// the ans is going to be int or float
+
+	reminder := a % b
+	fmt.Println("Reminder is :", reminder)
+}
+
+
+// Note : Go through UNDERFLOW and OVERFLOW concepts in depth.
 
 ------------------------------------------User Input in Go Language ---------------------------------------------- 
 
