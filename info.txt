@@ -1,0 +1,1333 @@
+how to check version : Go version in cmd 
+If you run - "go env GOPATH"  in cmd you will get some path like C:\Users\Sachin\go  so, basically by default the source 
+codde and files are stored in GO workspace like above to keep things organized 
+    bin folder contains - executable binaries 
+    pkg - contains the required packages 
+    src - source code of our project 
+
+    so, GO language RECOMMENDS to keep your code/files in src file to ensure GO workspace but in general we have habit 
+    of creating a seperate folder to keep our programs just like this one : C:\Users\Sachin\SACHIN\Study\Web_Dev\GoLang\Basic_GoLang
+
+    if u have kept your code in Go workspace all the packages will be imported by default from go workspace 
+
+    -- Go Modules : above workspace issue is solved by Go Modules
+    steps: go to root folder of our file here Basic_GoLang in terminal and run-  "go mod init mylearning"
+    it will create a go.mod file and go module names mylearning : basically it will act as bridge btn our this source code 
+    and go path. 
+
+First Program: 
+    
+    package main
+
+    import "fmt"
+
+    func main() {
+        fmt.Println("Hello GoPhers, My name is Sachin")
+    }
+
+    how to run program : go run main.go 
+
+    here NOTE: main.go is executable file of our project and you will have to write strings in " " only Double Quote.
+    fmt is go reformat packeage source library 
+
+    Package main is special. It defines a stand alone executable program, not a library. Within package main the 
+    function main is also special—it’s where execution of the program begins. Whatever main does is what the 
+    program does. Of course, main will normally call up on functions in other packages to do much of the work, 
+    such as the function fmt.Println
+
+    if you want to write an executable code then it must belong to package main and it must be in func main() and 
+    it DOES NOT matter what you name the file like here we have named the file as main.go but its not necessary 
+    it will still execute .
+
+    in Go language, the Directories,packages and files are very TIGHTLY COUPLED . means NOTE: 
+    every file in SAME DIRECTORY MUST BELONG to SAME PACKAGE.  like here package main is coupled with Basic_GoLang 
+    directory but if i create another file named myutils.go and in that file if i use package myutil it will give me 
+    error since we have already package main for this directory , then how to solve this issue ? 
+    We have to create a new folder inside this Basic_GoLang folder and there we can create file myutil with myutil package
+    and all files in that directory MUST have package myutil .
+
+    Now, how can we import this newly created myutil in main.go ? 
+
+    NOTE NOTE NOTE :  
+    The error occurs because the function printMessage in the myutil package is unexported. 
+    In Go, only functions, variables, or types whose names start with a capital letter are exported from a package
+    and made available for other packages to use.Since the function printMessage starts with a lowercase "p", 
+    it is considered PRIVATE to the myutil package and cannot be accessed from other packages.
+
+    If an entity is declared within a function, it is local to that function. If declared outside of a
+    function, however, it is visible in all files of the package to which it belongs. 
+    If the name begins with an upper-case letter, it is expor ted, which means that it is visible and accessible outside 
+    of its own package and may be referred to by other parts of the program, as with Printf in the fmt package. 
+    Package names themselves are always in lowercase.
+
+    If the program is more thanaone-shot experiment, it’s likely that you would want to compile it once and save 
+    the compiled result for later use. That is done with go build:
+    $ go build main.go
+
+    Go has 25 keywords like if and switch that may be used only where the syntax per mits; they can’t be used as names.
+    break    default    func    interface   select
+    case    defer   go      map     struct
+    chan    else    goto    package     switch
+    const   fallthrough     if  range   type
+    continue    for     import  return   var 
+
+    In addition, there are about three dozen predeclared names like int and true for built-in constants, types, and functions:
+    Constants: true false iota nil
+    Types:  int int8 int16 int32 int64
+            uint uint8 uint16 uint32 uint64 uintptr
+            float32 float64 complex128 complex64
+            bool byte rune string error
+    Functions:  make len cap new append copy close delete
+                complex real imag
+                panic recover
+
+    
+    Println is one of the basic output functions in fmt; it prints one or more values, separated by spaces, with a 
+    newline character at the end so that the values appear as a single line of output. 
+
+    format specifiers : 
+        %d = int 
+        %.2f = float number till 2 decimal pointa 
+        %T = Type 
+        %s = strings
+        %q = quoted strings 
+
+
+------------------------------------------User Input in Go Language ---------------------------------------------- 
+
+    
+# How to take user input? 
+    1. scan() method: scan method reads till only white spaces and not beyond it or 
+                      scan method reads space seperated inputs and assign them to respected variables. 
+                      It stops reading input after encountering a newline (\n) or space, and will keep 
+                      reading until all the provided variables are filled.
+
+        var a, b int
+        fmt.Scan(&a, &b)
+        fmt.Println("a:", a, "b:", b)
+
+    2.scanln() method:It reads space-separated values and stores them into the provided variables.
+                      It stops reading after encountering a newline, making it better for single-line inputs.
+                      It must read all variables from a single line. If there’s leftover input (e.g., extra 
+                      space-separated values), Scanln will return an error. 
+
+        var a, b string
+        fmt.Scanln(&a, &b)
+        fmt.Println("a:", a, "b:", b)
+
+    3.scanf() method:
+
+        var a int
+        var b string
+        fmt.Scanf("%d %s", &a, &b)
+        fmt.Println("a:", a, "b:", b) 
+
+    4.bufio.NewReader() method: The bufio package is another way to take input from the user. 
+                    It is particularly useful for reading larger chunks of input or handling input with more 
+                    flexibility (like reading entire lines or custom-delimited data).
+    
+            The bufio.NewReader() method in Go is used to create a buffered reader that allows you to efficiently 
+            read input from an io.Reader (like os.Stdin or a file) in a more controlled way compared to direct 
+            reading methods like fmt.Scan().
+
+        var name string
+        reader := bufio.NewReader(os.Stdin)
+        name, _ = reader.ReadString('\n')
+
+        fmt.Println("hey gophers, our username is:", name)
+
+
+        here in name,_ : _ (underscore): This is Go's blank identifier, which is used to ignore the error returned 
+        by ReadString. In Go, when a function returns multiple values, you must handle all of them, so _ is a way 
+        to discard values that you don’t care about. In this case, we are ignoring the error for simplicity.
+
+
+        ReadString(delim type),ReadBytes(delim type) more or less similar kind of input taking 
+        ReadLine() :Reads a single line, handling long lines more efficiently by returning the line 
+                    without allocating memory for every line.
+                    Unlike ReadString, it returns the line without the newline character (\n).
+            line, _, _ := reader.ReadLine()
+            fmt.Println(string(line))  // You need to convert byte slice to string
+
+    input, err := reader.ReadString('\n')
+    if err != nil {
+        fmt.Println("Error reading input:", err)
+    } else {
+        fmt.Println("You entered:", input)
+    }
+
+------------------------------------------Functions in Go Language ----------------------------------------------
+
+
+        
+------------------------------------------Arrays in Go Language ---------------------------------------------- 
+
+An array in Go is a fixed-size collection of elements of the same type. Once you define an array with a specific size, 
+its length cannot be changed.
+
+    syntax : var arrayName [size]dataType
+
+    var name [2]string
+	name[0] = "Sachin"
+	name[1] = "Suraj"
+
+	fmt.Println("the names of two brothers are:", name)
+
+	var numbers = [5]int{1, 2, 3, 4, 5}
+	fmt.Println(numbers)
+	fmt.Println(len(numbers))
+	fmt.Println(numbers[4])
+    numbers[1] = 200  # this is how we modify the array 
+	fmt.Println(numbers[1])
+
+	var price [5]int
+	fmt.Println(price)
+
+	var price1 [10]string
+	fmt.Println(price1)
+
+	var price2 [5]bool
+	fmt.Println(price2)
+
+
+    how can we omit size of the array ? : using slices 
+        numbers := [...]int{10, 20, 30, 40, 50} 
+
+
+    how to iterate through the array elements: 
+        for i := 0; i < len(numbers); i++ {
+            fmt.Println(numbers[i])  // Print each element
+        }
+        
+
+        for index, value := range numbers {
+            fmt.Printf("Index: %d, Value: %d\n", index, value)
+        }     #The range loop gives both the index and the value of each element.
+
+
+        2d arrays :
+
+            var matrix [3][3]int  // A 3x3 matrix (2D array)
+            matrix[0][0] = 1      // Set values
+            matrix[1][1] = 5
+            matrix[2][2] = 9
+
+            fmt.Println(matrix)  
+
+            another way to define 2d array:
+
+                matrix := [3][3]int{
+                    {1, 2, 3},
+                    {4, 5, 6},
+                    {7, 8, 9},
+                }
+
+    #how to append and pop from array in Go language : 
+        since arrays are of fixed and predefined size in GO you simply can’t append/pop from array for that you will have 
+        to use slices. 
+        In Go, slicing does not copy the underlying array. It just adjusts the slice’s length and capacity, which 
+        is efficient.
+
+
+------------------------------------Slices in Go language ---------------------------------------------------------
+
+A slice is a dynamically-sized, more powerful version of an array in Go. Unlike arrays, slices can grow and shrink, 
+making them highly flexible. They are a view into an underlying array, and they track a portion of that array.
+
+    $Three ways to declare Slices:
+        1.var SliceName []datatype          eg. var numbers[]int 
+        2.using Literals : eg. numbers :=[]int{1,2,3,4,5}
+        3.using make() function: make() function has three parameters inside it : pointers,length,capacity 
+                numbers := make([]int, 5)         // Creates a slice of length 5, all elements initialized to 0
+                numbers := make([]int, 5, 10)     // Slice of length 5, capacity 10
+
+                Length: The number of elements the slice currently holds.
+                Capacity: The number of elements the slice can hold without allocating more memory 
+                          (default is the same as the length).
+        basically array is an underlying data structure of slices         
+
+    $Accessing the slice elements :
+        numbers := []int{1, 2, 3, 4, 5}
+        fmt.Println(numbers[0])  // Access the first element: 1
+        numbers[1] = 20          // Modify the second element
+        fmt.Println(numbers)     // Output: [1 20 3 4 5]
+
+    $Slicing the Slice:
+        numbers := []int{1, 2, 3, 4, 5}
+        subSlice := numbers[1:4]  // Slice from index 1 to 3 (not including index 4)
+        fmt.Println(subSlice)  
+
+    $Appending to slicing elements:
+        numbers := []int{1, 2, 3}
+        numbers = append(numbers, 4, 5)  // Appends 4 and 5 to the slice
+        fmt.Println(numbers)             // Output: [1 2 3 4 5] 
+
+        we can also append one slice to another 
+
+            moreNumbers := []int{6, 7}
+            numbers = append(numbers, moreNumbers...)
+            fmt.Println(numbers)  // Output: [1 2 3 4 5 6 7]
+
+    $length and capacity of slices :
+
+        numbers := []int{1, 2, 3, 4, 5}
+        fmt.Println(len(numbers))  // Output: 5 (length)
+        fmt.Println(cap(numbers))  // Output: 5 (capacity)
+
+    $what is difference between = and := in go ?
+        := is like short declaration, it declares and initializes the value , generally creates a new variable 
+        = it is like assignment operator, it assigns value to preexisting varaible , generally works with already 
+            existing variable 
+
+#Comparision Operators : 
+    == : equal to 
+    != : not equal to 
+    >  : greater than 
+    >= : greater than or equal to 
+    <  : less than 
+    <= : less than or equal to 
+
+#Logical operators:
+    && : AND 
+    || : OR 
+    !  : NOT 
+
+
+# If -Else - Else if conditions in Go language 
+
+    func main() {
+	var x, y, z int
+	fmt.Scanln(&x, &y, &z)
+	fmt.Println("your entered numbers are :", x, y, z)
+	if x == y && y == z {
+		fmt.Println("all values are same")
+	} else if x > y && y < z || x > y && y > z {
+		fmt.Println("value of x is highest which is :", x)
+	} else if x > y && z > x || x < y && y < z {
+		fmt.Println("value of z is highest which is:", z)
+	} else if x < y && z < x {
+		fmt.Println("value of y is highest which is:", y)
+	}
+    }
+
+
+# Switch statement in Go language :
+    
+    func main() {
+	// var marks int32
+	// fmt.Scanln(&marks)
+	marks := 80
+	switch marks {
+	case 40:
+		fmt.Println("the marks obtained are below average")
+	case 70:
+		fmt.Println("the marks obtained are AVERAGE ")
+	case 80, 90:
+		fmt.Println("Excellent")
+	}
+
+	temperature := 31
+	switch {
+	case temperature <= 20:
+		fmt.Println("weather is Cold")
+	case temperature > 20 && temperature < 30:
+		fmt.Println("weather is Moderate")
+	case temperature >= 30:
+		fmt.Println("very hot weather")
+
+	}
+    }
+
+#For loops in GO language:
+
+    func main() {
+	var userinput int
+	fmt.Scanln(&userinput)
+	for i := 1; i <= userinput; i++ {
+		fmt.Println("value of i is:", i)
+	}
+
+
+    following code is for infinite loop 
+
+	counter := 0
+	for {
+		fmt.Println("infinite loop")
+		counter++
+		if counter == 4 {
+			break
+		}
+	}
+
+
+    using range also you can iterate through iterables
+
+	numbers := []int{10, 20, 30, 40, 50}
+	for index, value := range numbers {
+		fmt.Printf("Index: %d, Value: %d\n", index, value)
+	}
+
+	data := "Hello World"
+	for index, char := range data {
+		fmt.Printf("Index: %d, Value: %c\n", index, char)
+	}
+
+    You can iterate over the runes (Unicode characters) of a string.
+
+	str := "hello"
+	for index, runeValue := range str {
+		fmt.Printf("Index: %d, Rune: %c\n", index, runeValue)
+	}
+
+
+    iterating over 2d matrices :
+        matrix := [][]int{
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
+    }
+
+    for i := 0; i < len(matrix); i++ {
+        for j := 0; j < len(matrix[i]); j++ {
+            fmt.Print(matrix[i][j], " ")
+        }
+        fmt.Println()
+    }
+
+
+
+    $for loop with multiple variables:
+        for i, j := 0, 10; i < 5; i, j = i+1, j-1 {
+        fmt.Printf("i=%d, j=%d\n", i, j)
+    }
+
+
+    $for loop with Functions 
+
+        func condition() bool {
+            return time.Now().Second()%10 == 0
+        }
+
+        for condition() {
+            fmt.Println("Second is divisible by 10")
+            time.Sleep(1 * time.Second)
+        }
+}
+
+
+
+--------------------------------------------Maps in Go language ---------------------------------------------------
+
+    In Go, a map is a built-in data type that represents a collection of key-value pairs. Maps are incredibly 
+useful when you need to look up data based on unique keys.
+    Maps are like dictionaries in other languages .
+
+$Maps syntax in Go : 
+        1st way to declare map :    var mapName map[keyType]valueType               eg.var ageMap map[string]int
+
+        2nd way to declare map:     ageMap := make(map[string]int)
+
+
+        3rd way to declare map:     ageMap := map[string]int{
+                                        "Alice": 25,
+                                        "Bob": 30,
+                                    }
+                                    fmt.Println(ageMap)
+
+        
+$How to check whether the given key exists in given map or not ? 
+    age, ans := ageMap["Alice"]
+	if ans {
+		fmt.Println("Alice age is :", age)
+	} else {
+		fmt.Println("No Alice is found in ageMap")
+	}
+
+$how to delete an element from map: 
+    delete(ageMap,"Bob")
+    fmt.Println(ageMap)
+
+$how to iterate over a map ? 
+
+    ageMap := map[string]int{"Alice": 25, "Bob": 30, "Charlie": 35}
+    for key, value := range ageMap {
+        fmt.Printf("Key: %s, Value: %d\n", key, value)
+    }
+$Length of map: fmt.Println(len(ageMap))
+
+#Map of slices :
+
+        studentCourses := map[string][]string{
+            "Alice": {"Math", "Physics"},
+            "Bob":   {"Chemistry", "Biology"},
+        }
+
+        fmt.Println(studentCourses["Alice"])  // Output: [Math Physics]
+
+#Map of maps :
+        studentCourses:= map[string]map[string]int {
+            "Alice": {"age": 25, "salary": 5000},
+            "Bob":   {"age": 30, "salary": 6000},
+        }
+
+#Nil maps vs Empty maps : 
+        Nil maps: A nil map has no underlying storage, and attempting to add elements to it'll cause a runtime panic.
+
+            var ageMap map[string]int  // nil map
+            ageMap["Alice"] = 25       // Runtime error: assignment to entry in nil map 
+
+        Empty Maps : An empty map is properly initialized but contains no elements.
+
+            ageMap := make(map[string]int)  // Empty map, no panic
+            fmt.Println(len(ageMap))        // Output: 0
+
+###Maps are reference types in Go language :
+
+        Maps are reference types in Go, meaning that when you pass a map to a function, any modifications made to 
+        the map inside the function will be reflected outside the function.
+
+        func modifyMap(m map[string]int) {
+            m["Alice"] = 30  // Modify the map
+        }
+
+        func main() {
+            ageMap := map[string]int{"Alice": 25}
+            modifyMap(ageMap)
+            fmt.Println(ageMap)  // Output: map[Alice:30]
+        }
+
+
+----------------------------------- Structs in Golang ------------------------------------------------------------- 
+
+In Golang, structs are a way to group related data together, forming a composite data type. Structs are similar to 
+classes in object-oriented programming, but they don't have inheritance
+
+
+package main
+
+import "fmt"
+
+type person struct {
+	firstname string
+	lastname  string
+	age       int
+}
+
+type contact struct {
+	email string
+	phone string
+}
+
+type address struct {
+	houseno int
+	area    string
+	state   string
+}
+
+type Employee struct {
+	personal_details person
+	personal_contact contact
+	personal_address address
+}
+
+func main() {
+	fmt.Println("Lecture on struct/Structure in Golang")
+
+	//WAY -1 to using struct
+	var student1 person
+	student1.firstname = "Sachin"
+	student1.lastname = "Chole"
+	student1.age = 25
+	fmt.Println(student1)       //{Sachin Chole 25}
+
+	//Way-2 of using struct
+	student2 := person{
+		firstname: "Suraj",
+		lastname:  "Chole",
+		age:       28,
+	}
+	fmt.Println(student2)       //{Suraj Chole 28}
+	student2.age = 29
+	fmt.Println(student2.age)           //29
+
+	//this is representation of struct within struct concept ( for whole struct which are defined in the code)
+
+	//way-1 of declaring such structs
+	var Employee1 Employee
+	Employee1.personal_details = person{
+		firstname: "Sachin",
+		lastname:  "Chole",
+		age:       25,
+	}
+	Employee1.personal_contact = contact{
+		email: "sachinchole@yahoo.com",
+		phone: "12345",
+	}
+	Employee1.personal_address = address{
+		houseno: 11,
+		area:    "Nanded",
+		state:   "Maharashtra",
+	}
+	fmt.Println("---------------")          //---------------
+	fmt.Println(Employee1)                  //{{Sachin Chole 25} {sachinchole@yahoo.com 12345} {11 Nanded Maharashtra}}
+}
+
+
+
+------------------------------------------ Pointers ----------------------------------------------------------------
+
+#Pointers in General 
+    A pointer is a variable that stores the memory address of another variable. pointers are a way to reference the 
+    memory location of a value rather than the value itself. They allow you to share and manipulate data efficiently 
+    without making copies, which is useful for performance and passing large data structures.
+
+    -The type of a pointer is written as *Type, meaning "a pointer to Type."
+    -The zero value of a pointer is nil.
+
+    suppose there is a variable named X = 43 then there will be address(0x0000) of this X variable in memory .
+    now the pointer "ptr" stores the address of that variable X 
+    TO Define pointer variable in C++  , INT *ptr : It means the pointer variable ptr have the address of memory location 
+    which stores integer type of data (i.e. X=43 is Int type of data) . Note: It does not mean that pointer ptr stores
+    the Integer type of data .
+
+    Variable	Value	                   Address
+    x	        42	                       0x1234
+    ptr	        0x1234 (address of x)	   0x5678
+        &x gives 0x1234, which is stored in ptr.
+        *ptr retrieves the value 42 stored at 0x1234.
+
+        & is called "Address of Operator"
+
+        i.e. if you output the ptr value ---> 0x1234 
+             if you output the *ptr then ---> 42
+
+    
+    now what is concept of INT **ptr 
+    here ** means suppose INT *ptr = &X (i.e. here we are storing the address of X  in ptr )
+    now INT **PTR1 = ptr means in ptr1 we are storing the address of address of X  i.e. value of "ptr" 
+
+
+    now in case of Array you dont write "&" before declaring the variable ptr or if you want to add & the do it &a[0]
+
+    i.e. a = [1,2,3,4,5,6]
+    INT *PTR =  a 
+    or 
+    INT *PTR = &a[0] 
+
+    these both are correct . 
+
+
+# Pointers in GoLang specifically 
+
+    package main
+
+    import "fmt"
+
+    func makechanges(inputnum *int) {
+        *inputnum = *inputnum * 10
+    }
+    func main() {
+        fmt.Println("Lecture on Pointers")
+
+        var name string
+        var ptr *string
+        name = "Sachin"
+        // var ptr *string
+        ptr = &name
+        fmt.Println("name is", name)
+        fmt.Println("address of name", ptr)
+
+        num := 2
+        ptr1 := &num
+        fmt.Println("address of num is", ptr1)
+        fmt.Println("value at ptr address is", *ptr1)
+
+        var pointer *int
+        if pointer == nil {
+            fmt.Println("the given pointer is nil")
+        }
+
+        makechanges(&num)
+        fmt.Println("modified value of num is", num)
+    }
+
+
+    basically in go , if you have declared some variable so it will definately hold some value in it.
+
+
+----------------------------------------------Data Conversions in GoLang -----------------------------------------
+
+we want to convert integer type data into string type data like that 
+
+why we do this ? ---> because we can not do some opertations with some conditions 
+        eg . int must be added to int only 
+
+Package main
+
+import (
+	"fmt"
+	"strconv"
+)
+
+func main() {
+	//way to convert INT data to FLOAT
+	var num int = 42
+	fmt.Println("initial value is", num)
+	fmt.Printf("type of num is %T\n", num)
+
+	var data float32 = float32(num)
+	fmt.Println("value of data is", data)
+	fmt.Printf("type of data is %T\n", data)
+
+	//way to convert STRING data to INT
+	number := "12345"
+	fmt.Println("the initial value is", number)
+	fmt.Printf("the initial type is %T\n", number)
+
+	numberint, _ := strconv.Atoi(number)
+	fmt.Println("after value is", numberint)
+	fmt.Printf("after type is %T\n", numberint)
+
+	//way to convert INT data to STRING
+
+	marks := 12345
+	fmt.Println("the initial mark is", marks)
+	fmt.Printf("the initial type is %T\n", marks)
+
+	marksstring := strconv.Itoa(marks)
+	fmt.Println("the after value is", marksstring)
+	fmt.Printf("the after type is %T\n", marksstring)
+
+	//way to convert STRING data to FLOAT data
+	num_string := "123"
+	fmt.Println("the initial value is", num_string)
+	fmt.Printf("the initial type is %T\n", num_string)
+	num_float, _ := strconv.ParseFloat(num_string, 64)
+	fmt.Println("the after value is", num_float)
+	fmt.Printf("the after type is %T\n", num_float)
+
+}
+
+
+
+-------------------------------------------Strings package ------------------------------------------------------
+
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func main() {
+	fmt.Println("lecture on strings package")
+
+	//Checking and Searching
+
+	data := "hello world"
+	check := "world"
+	//Contains : check if substring exists in string
+	fmt.Println(strings.Contains(data, check))
+
+	//ContainsAny : Checks if any character from a set of characters exists in a string
+	fmt.Println(strings.ContainsAny(data, "aeiou"))
+
+	//ContainsRune : Checks if a specific Unicode rune exists in a string
+	//Note , here you have to define RUne in single quote only .
+	fmt.Println(strings.ContainsRune(data, 'z'))
+
+	//Index: Find the index of first occurance of string
+	fmt.Println(strings.Index(data, check))
+
+	//LastIndex : Find the Last index of string
+	fmt.Println(strings.LastIndex(data, "e"))
+
+	//Modifying strings
+
+	fmt.Println(strings.ToUpper("hello"))
+	fmt.Println(strings.ToLower("WORLD"))
+
+	//Title : it capitalize the first letter of each word
+	fmt.Println(strings.Title("go language"))
+
+	//Trim: Removes leading and trailing characters (default: spaces):
+	fmt.Println(strings.Trim("  hello  ", " "))   // "hello"
+	fmt.Println(strings.Trim("!!!hello!!!", "!")) // "hello"
+
+	//TrimSpace : Removes all leading and trailing whitespace
+	fmt.Println(strings.TrimSpace("   hello world   ")) // "hello world"
+
+	//Repalce and ReplaceAll : Replaces the part of the string
+	fmt.Println(strings.Replace("hellloooo GOUSERS", "GOUSERS", "GoPhers", 1))
+	fmt.Println(strings.ReplaceAll("hello helloo helloo", "hello", "Hi"))
+
+	//split and Join
+
+	//Split : split the string into slices based on delimeter
+	words := strings.Split("go is awesome", " ")
+	fmt.Println(words) // ["go", "is", "awesome"]
+
+	//SplitN : Splits a string into a limited number of substrings
+	words1 := strings.SplitN("a,b,c,d", ",", 2)
+	fmt.Println(words1)
+
+	//join : join a slice of strings into single string with delimeter
+	fmt.Println(strings.Join([]string{"go", "is", "awesome"}, " ")) // "go is awesome"
+
+	//Repeat : it repeats the string for n number of time
+	fmt.Println(strings.Repeat("go", 3)) // "gogogo"
+
+	//HasPrefix, HasSuffix :
+	fmt.Println(strings.HasPrefix("golang", "go"))
+	fmt.Println(strings.HasSuffix("golang", "ng"))
+
+	//Compare : Performs lexicographical comparison:
+	// Returns 0 if strings are equal.
+	// Returns -1 if the first string is less than the second.
+	// Returns 1 if the first string is greater than the second.
+	fmt.Println(strings.Compare("a", "b")) // -1
+	fmt.Println(strings.Compare("b", "a")) // 1
+	fmt.Println(strings.Compare("a", "a")) // 0
+
+	//EqualFold: for case insensitive string comparision
+	fmt.Println(strings.EqualFold("GoLang", "golang")) // true
+
+	//Count : count the occurances
+	fmt.Println(strings.Count("cheese", "e"))
+
+	//Fields: splits a string by whitespaces into a slice
+	word2 := strings.Fields("  go is awesome  ")
+	fmt.Println(word2) // ["go", "is", "awesome"]
+
+}
+
+
+Summary
+The strings package provides a comprehensive set of tools for:
+
+Checking for substrings.
+Modifying strings.
+Splitting and joining strings.
+Comparing and counting substrings.
+
+
+----------------------------------------- Time Package ------------------------------------------------------------
+
+Do it again 
+
+
+
+------------------------------------------- Defer keyword --------------------------------------------------------
+
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("start of the program")
+	defer fmt.Println("mid of the program")
+	defer fmt.Println(" ohhh this statment will run first among two defer statments ")
+	fmt.Println("end of the program")
+
+	//defer keywords causes statements or functions to run at the end of execution of main function
+	// but keep in mind if two or more defer statements are present in the code then these defer statements will
+	// go into stack and at the end of main() program get pops out
+}
+
+
+-----------------------------------------------File systems in Golang ------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------- Web Request in GOlang -------------------------------------------------
+
+In Go, making web requests is primarily handled by the net/http package. This package provides a comprehensive API 
+for sending and receiving HTTP requests.
+
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	fmt.Println("learning web request in Golang")
+	//In Go, making web requests is primarily handled by the net/http package.
+	//This package provides a comprehensive API for sending and receiving HTTP requests.
+
+	res, err := http.Get("https://jsonplaceholder.typicode.com/todos/2")
+	if err != nil {
+		fmt.Println("error while running the GET Request")
+		return
+	}
+	defer res.Body.Close()
+	fmt.Printf("type of response is %T\n", res)
+
+	//now how can we read the response body : by using ioutil.ReadAll()
+	data, err1 := ioutil.ReadAll(res.Body)
+	if err1 != nil {
+		fmt.Println("error while fetching the data", err1)
+		return
+	}
+	fmt.Println("the data on that particular URL is", string(data))
+}
+
+
+
+
+--------------------------------------- URLs in GoLang ---------------------------------------------------------
+
+package main
+
+import (
+	"fmt"
+	"net/url"
+)
+
+func main() {
+	fmt.Println("everything about URL i.e. Uniform Resource Locator")
+	link := "https://github.com/SachinC8041/GolangPractice"
+	fmt.Printf("type of url is %T\n", link)
+
+	parsedURL, err := url.Parse(link)
+	if err != nil {
+		fmt.Println("can not parse the URL")
+		return
+	}
+	fmt.Printf("type of url is %T\n", parsedURL)
+	fmt.Println("Scheme:", parsedURL.Scheme)
+	fmt.Println("Host :", parsedURL.Host)
+	fmt.Println("path :", parsedURL.Path)
+	fmt.Println("Rawquery :", parsedURL.RawQuery)
+
+	parsedURL.Path = "SachinC8041/CrackYourPlacement"
+	newurl := parsedURL.String()
+	fmt.Println(newurl)
+}
+
+
+--------------------------------------------JSON files in Golang -------------------------------------------------
+
+In Go , encoding/json is used to encode and decode JSON( javascript object notation) data. JSON is lightweight data 
+interechange format that is easy for humans to read and write and easy for machines to parse and generate 
+
+here is the basic way to define and use JSON in GO
+1.define a struct : define a struct that represent a JSON Data structure 
+2.Marshalling(Encoding): use JSON.Marshall to convert GO struct into json-encoded byte array 
+3.Unmarshalling(Decoding): use json.unmarshall to convert json-encoded byte array into Go struct .
+
+
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type Person struct {
+	Name    string `json:"name`
+	Age     int    `json:age`
+	Isadult bool   `json:is_adult`
+}
+
+func main() {
+	fmt.Println("lecture to understand JSON in GO language")
+
+	person := Person{"Sachin", 25, true}
+	fmt.Println("perosn data is", person)
+
+	//Marshalling i.e. convert data into JSON format
+	jsondata, err := json.Marshal(person)
+	if err != nil {
+		fmt.Println("error marshalling the data ", err)
+		return
+	}
+	fmt.Println("JSON converted data is ", string(jsondata))
+
+	//Unmarshalling i.e. ocnverting the json data back to go struct data
+	var perosndata Person
+	err = json.Unmarshal(jsondata, &perosndata)
+	if err != nil {
+		fmt.Println("error while unmarshalling the data", err)
+	}
+	fmt.Println("data after unmarshalling is:", perosndata)
+}
+
+
+
+---------------------------------------------- Method Sets in Golang ---------------------------------------------
+
+
+What is a Method Set?
+In Go, a method set is the collection of methods that a type has. This concept is important because it determines:
+
+Which methods can be called on a type or its pointer.
+Whether a type satisfies an interface.
+Key Rules of Method Sets
+For a type T:
+
+The method set of T includes methods with a receiver type T.
+It does not include methods with a pointer receiver (*T).
+For a pointer type *T:
+
+The method set of *T includes methods with a receiver type T and methods with a receiver type *T.
+Why Does This Matter?
+When you define methods with a pointer receiver (func (t *T)), those methods are not available in the method set of the value type T. This distinction is critical for:
+
+Calling Methods: Whether you use a value (T) or a pointer (*T) affects which methods can be called.
+Interfaces: For a type to satisfy an interface, its method set must include all methods required by the interface.
+
+
+
+
+
+------------------------------------------------ Interfaces in GOlang ---------------------------------------------
+
+we know that every value has a type and every function has to specify type of its arguments 
+
+so does that mean for every different type of data we have to write the different function ? although the logic 
+within that code is same ? this problem is solved by Interfaces in Golang.
+
+In Go, an interface is a type that specifies a set of method signatures. A type is said to implement an interface 
+if it defines all the methods declared in the interface.
+
+Key Points to Remember:
+    Interfaces define behavior (methods) but do not implement them.
+    They are implicit—types automatically satisfy an interface if they implement its methods (no need to explicitly 
+    declare it).
+    Interfaces are a powerful tool for achieving polymorphism in Go.
+
+Type : 
+    TYpe defines kind of data a value can hold and what operations you can perform on it .
+
+    1.built in types : int , bool ,string , float32/64 
+    2.custom types : you can create it using Structs and Interfaces 
+    3.Function as a type : 
+            eg. type Adder func(a int , b int ) int 
+
+Signature : 
+    A signature defines how a method or function looks: its name, parameters, and return values.
+
+    General Form of Signature : 
+                func (receiver TypeName) MethodName(param1 ParamType1, param2 ParamType2) ReturnType
+
+    eg.1    func (d Dog) Speak() string {return "Woof!"}
+    eg.2 Signature example of Interfaces : 
+                type Speaker interface {
+                    Speak() string // Signature: name (Speak), params (none), return (string)
+                }
+
+    Methods :
+        Yes, methods are functions, but they are associated with a specific type. In other words:
+            A function is a standalone block of code.
+            A method is a function that is tied to a specific type (a "receiver" type).
+
+        1.Normal Function with No receiver : 
+                func Add(a int, b int) int {
+                    return a + b
+                }
+
+                func main() {
+                    result := Add(3, 5) // Output: 8
+                    fmt.Println(result)
+                }
+
+        2.Function with Receiver : 
+            type Dog struct {
+                Name string
+            }
+
+            // Speak is a method for the Dog type
+            func (d Dog) Speak() string {
+                return "Woof! My name is " + d.Name
+            }
+
+            func main() {
+                myDog := Dog{Name: "Buddy"}
+                fmt.Println(myDog.Speak()) // Output: Woof! My name is Buddy
+            }
+
+
+In GO, Interface is like "Contract" that defines a set of methods a type must have .It doesn't provide the actual 
+implementation of these methods—just their "blueprint" or "signature" (name, parameters, and return values).
+
+example of Interface : 
+type Speaker interface {
+    Speak() string
+}
+
+Here, the Speaker interface says: 
+"Any type that has a Speak method with this exact signature implements the Speaker interface."
+
+
+# Implementing an Interface : 
+    In Go, You dont explicitly says that " Hey, this type implements that Interface "
+    If a type has all the methods requierd by an interface , it automatically implements that interface .
+
+    package main 
+
+    import "fmt"
+
+    type Speaker interface {
+        Speak() string
+    }
+
+    type Dog struct{}
+
+    func main(){
+        -------------------
+    }
+
+    func (D Dog) Speak()string{
+        return "Woof Woof !!!"
+    }
+
+    here in this example since the Dog has a method Speak that matches the Speaker interface , so Dog will implement
+    Speaker interface .
+
+
+# What is Polymorphism  and How Interface help to implement them in Go ? 
+
+    Polymorphism allows you to write code that works with different types in same way .
+
+    eg of polymorphism with help of Interface. 
+
+    type Speaker interface {
+        Speak() string
+    }
+
+    type Dog struct{}
+    func (d Dog) Speak() string {
+        return "Woof!"
+    }
+
+    type Cat struct{}
+    func (c Cat) Speak() string {
+        return "Meow!"
+    }
+
+    // A function that works with any Speaker
+    func MakeItSpeak(s Speaker) {
+        fmt.Println(s.Speak())
+    }
+
+    func main() {
+        dog := Dog{}
+        cat := Cat{}
+
+        // Both Dog and Cat satisfy the Speaker interface
+        MakeItSpeak(dog) // Output: Woof!
+        MakeItSpeak(cat) // Output: Meow!
+    }
+
+
+
+------------Still you have visit the Udemy Go: Complete developers guide Interface section (Reader , Writer)---
+
+
+
+
+----------------------------------------------- CRED Operation in GOlang ------------------------------------------
+
+
+
+
+---------------------------------------- Concurrency , GoRoutines , Channels ------------------------------------
+
+Concurrency : 
+    when two or more control flows (THREADS) of execution share one or more CPU's . In such cases the CPU Scheduler 
+    gets to decide When each thread gets to execute and on Which CPU. For example , even if there are only one CPU 
+    and two or more threads to share the CPU , then its considered the Concurrent execution of Program . 
+    Think of concurrency as the way to structure the program so that it can handle multiple task at the same time. 
+    Its like chef in the kitchen working on dishes at the same time. 
+
+Parallelism :
+    It is subset of Concurrency.Its when two or more threads can execute on two or more CPUs. For example Three threads 
+    executing on three different CPUs simultaniously. 
+
+
+GoRoutines: 
+    These are the key features in Go programming langage that allows you to run functions concurrently. 
+    Imagine a task that can run/execute independently instead of other subtasks to finish working these can be 
+    possible with the help of Goroutines. 
+
+
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func sayHello() {
+	fmt.Println("Hello GoPhers !!!!!!!!!!")
+	time.Sleep(4000 * time.Millisecond)
+	fmt.Println("I welcome you to the Go programming course")
+}
+
+func sayHi() {
+	fmt.Println("Hi Sachin, I hope you are doing fine.")
+}
+func main() {
+	fmt.Println("Learning Go routines")
+	sayHello()
+	time.Sleep(2000 * time.Millisecond)
+	sayHi()
+}
+
+
+Channels: 
+    -Channels are used to communicate between go routines and the main() executable function. 
+    -Channels in Go are a way to communicate between goroutines, enabling them to share data safely without explicit 
+    locking or shared memory. A channel can be thought of as a pipe through which goroutines can send and receive 
+    values.
+
+    When to Use Channels?
+        For goroutine synchronization.
+        To pass data between goroutines.
+        To implement producer-consumer patterns.
+    
+    # declaring a channel : var c chan int or var c chan char 
+    # creating a channel : ch := make(chan int)
+
+    # Sending and Receiving :
+        ch <- 42      // Send the value 42 into the channel
+        value := <-ch // Receive a value from the channel
+
+    # basic example of sending and receiving the channel : 
+
+        package main
+
+        import (
+            "fmt"
+        )
+
+        func main() {
+            ch := make(chan int)
+
+            // Start a goroutine
+            go func() {
+                ch <- 42 // Send 42 into the channel
+            }()
+
+            // Receive from the channel
+            value := <-ch
+            fmt.Println("Received:", value)
+        }
+
+
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	links := []string{
+		"https://www.google.com/",
+		"https://www.facebook.com/",
+		"https://stackoverflow.com/",
+		"https://go.dev/",
+		"https://www.amazon.com/",
+	}
+	c := make(chan string)
+
+	for _, link := range links {
+		go checkLinkStatus(link, c)
+	}
+
+	// Wait for all responses
+	for range links {
+		fmt.Println(<-c)
+	}
+}
+
+func checkLinkStatus(link string, c chan string) {
+	_, err := http.Get(link)
+	if err != nil {
+		c <- fmt.Sprintf("%s might be down", link)
+		return
+	}
+	c <- fmt.Sprintf("%s is working fine", link)
+}
+
+The reason you are always getting the output for just one link (e.g., https://www.amazon.com/) in your program is due to the following behavior of Go channels and goroutines:
+
+The Channel Behavior: In your code, you are making a call to fmt.Println(<-c) immediately after starting the goroutines. The <-c operation blocks the main goroutine until a value is sent into the channel c by one of the checkLinkStatus goroutines.
+
+Premature Exit: Once the first goroutine sends a value into the channel, fmt.Println(<-c) prints it, and the program terminates. Since the main goroutine doesn't wait for all the other goroutines to complete, you only see the result from the first goroutine that sends a value.
+
+Random Execution Order: Goroutines are scheduled concurrently, so the first one to send a value to the channel depends on the order in which the Go scheduler decides to run them. This order is not deterministic. However, in your case, the scheduler consistently seems to pick the https://www.amazon.com/ check first, which is why you see that output.
+
+
+Explanation of Changes
+Loop Over Links: After starting all the goroutines, the for range links loop waits for each goroutine to send a value to the channel. This ensures all results are processed.
+
+Goroutines Complete: The main goroutine now blocks until all goroutines have sent their results, ensuring the program does not exit prematurely.
+
+
+
+
+
+
+
+--------------- Process , Threads , Concurrency ----------------------------------------------------------------
+
+the instance of running program is called Process 
+OS allocates memory to run the program . Heap is used for Dynamic memory allocation and Stack is used to store Local 
+variable allocation. 
+
+Threads are smallest unit of exection that CPU Accepts. Process has at least one thread i.e. Main thread . Process 
+can have multiple threads and each thread share the same address space. 
+Threads can run independently. OS schedular makes the scheduling decisions at Thread level and not the Process level. 
+Threads can run concurrent or parallel .
+
+
+Can we divide our application into processes and Thread and achieve Concurrency ? yes by using Context Switching 
+but it has some limitations. 
+but what if we increase the Processes ? --> It will cause C10K Problem . 
+
+Why Concurrency is Hard ?
+Threads share the same memory and Threads communicate with each other with sharing memory. Sharing of memory creates 
+lot of Complexity. Concurrent access to shared memory by two or more threads can lead to data race and results can 
+be undeterministic. 
+    @ we can solve this using Memory Access synchronization. but it comes with its own limitations as it reduces the 
+    Parallelism. 
+
+#GoRoutines : GO routines are based on concept of Communicating Sequential Processes (CSP). It is based on 3 core 
+concepts . 
+    1. Each process is built for Sequential Execution . 
+    2. Data is communicated between processes . NO SHARED MEMORY. 
+       i.e. If we have to transfer data from One process to Another we DO NOT SHARE THE MEMORY but we communicate the 
+       data i.e. we send the copy of data over to other process. and since there is no sharing of memory there will be 
+       no data race or deadlocks. 
+    3. We can Scale but increasing the processes .
+
+GO's Concurrency Tools :
+    1.Goroutines
+    2.Channels
+    3.Select 
+    4.Sync Package 
+
+-We can think Goroutines as USER SPACE THREADS MANAGED BY GO RUNTIME. Goroutines are extremely Lighweight starting
+from 2kb of stack space which can grow and shrink as required. 
+-Low CPU Overhead : three instruction per function call 
+-can create hundreds of thousands of Go routines in same memory address space. 
+-Data is communicated between the Goroutines with the help of CHANNELS so the Sharing of memory can be avoided. 
+
+Go routines are working in the Context of OS threads. 
+Context switching is very simple with the help of Go routines as compared to OS Threads. 
+
